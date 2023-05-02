@@ -27,4 +27,9 @@ public class BookService {
   public Book createOne(Book book) {
     return bookRepository.save(book);
   }
+
+  public Book updateOne(Book book, UUID id) {
+    book.setId(id);
+    return bookRepository.save(book);
+  }
 }

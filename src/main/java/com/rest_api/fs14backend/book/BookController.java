@@ -34,8 +34,21 @@ public class BookController {
     return bookService.createOne(book);
   }
 
+  @PutMapping("/{id}")
+  public Book updateOne(@RequestBody Book book, @PathVariable UUID id) {
+    if (book == null) {
+      throw new NotFoundException("Book not found");
+    }
+    return bookService.updateOne(book, id);
+  }
+
   @DeleteMapping("/{id}")
   public void deleteOne(@PathVariable UUID id) {
+    Book book = bookService.findById(id);
+    System.out.println(book);
+    if (book == null) {
+      throw new NotFoundException("Book not found");
+    }
     bookService.deleteById(id);
   }
 }

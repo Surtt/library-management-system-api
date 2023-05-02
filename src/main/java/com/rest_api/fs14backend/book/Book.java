@@ -32,9 +32,23 @@ public class Book {
   @Column(nullable = false, columnDefinition = "varchar(20)")
   private String publisher;
   @Column(nullable = false, columnDefinition = "boolean default true")
-  private boolean status = true;
+  private Boolean status = true;
   @Temporal(TemporalType.DATE)
   private Date publishedDate;
   @Column(nullable = false, columnDefinition = "integer default 1")
   private Integer quantity;
+
+  @Override
+  public String toString() {
+    return "Book{" +
+            "id=" + id +
+            ", isbn='" + isbn + '\'' +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", publisher='" + publisher + '\'' +
+            ", status=" + status +
+            ", publishedDate=" + publishedDate +
+            ", quantity=" + quantity +
+            '}';
+  }
 }
