@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthorService {
@@ -16,30 +17,22 @@ public class AuthorService {
         return authorRepository.findAll();
     }
 
-    public Author findOneByLastName(String lastname){
-        return authorRepository.findOneByLastname(lastname);
+    public Author findById(UUID id){
+        return authorRepository.findById(id).orElse(null);
+    }
+
+    public void deleteById(UUID id) {
+        authorRepository.deleteById(id);
     }
 
     public Author createOne(Author author){
         return authorRepository.save(author);
     }
 
-    @Transactional
-    public void deleteByName(String lastname) {
-        System.out.println("delete by name is called" + lastname);
-        authorRepository.deleteBylastname(lastname);
-    }
+    public Author updateOne(Author author, UUID id) {
+        author.setId(id);
 
-    @Transactional
-    public Author updateAuthor(Long id, Author author) {
-        Author existingAuthor = authorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Author not found with id " + id));
-
-        existingAuthor.setAuthorname(author.getAuthorname());
-        existingAuthor.setLastname(author.getLastname());
-        existingAuthor.setDateofbirth(author.getDateofbirth());
-
-        return authorRepository.save(existingAuthor);
+        return authorRepository.save(author);
     }
 
 
