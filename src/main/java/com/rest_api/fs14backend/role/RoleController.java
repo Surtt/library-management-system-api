@@ -1,10 +1,10 @@
 package com.rest_api.fs14backend.role;
 
-import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,13 +20,8 @@ public class RoleController {
   }
 
   @GetMapping("/{id}")
-  public Role findById(@PathVariable UUID id) {
-    Role role = roleService.findById(id);
-
-    if (role == null) {
-      throw new NotFoundException("Role not found");
-    }
-    return role;
+  public Optional<Role> findById(@PathVariable UUID id) {
+    return roleService.findById(id);
   }
 
   @PostMapping

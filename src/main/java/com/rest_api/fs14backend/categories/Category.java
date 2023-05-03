@@ -14,12 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Category {
-    @Id
-    @Column
-    @UuidGenerator
-    @GeneratedValue
-    private UUID id;
-
-    @Column(nullable = false, columnDefinition = "varchar(50)")
-    private String name;
+  @Id
+  @Column
+  @UuidGenerator
+  @GeneratedValue
+  private UUID id;
+  @Column(nullable = false, columnDefinition = "varchar(50)")
+  private String name;
 }

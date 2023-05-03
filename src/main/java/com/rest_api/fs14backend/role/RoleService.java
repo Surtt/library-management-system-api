@@ -1,9 +1,11 @@
 package com.rest_api.fs14backend.role;
 
+import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,11 +18,19 @@ public class RoleService {
     return roleRepository.findAll();
   }
 
-  public Role findById(UUID id) {
-    return roleRepository.findById(id).orElse(null);
+  public Optional<Role> findById(UUID id) {
+    Optional<Role> roleOptional = roleRepository.findById(id);
+    if (roleOptional.isEmpty()) {
+      throw new NotFoundException("Role not found");
+    }
+    return roleRepository.findById(id);
   }
 
   public void deleteById(UUID id) {
+    Optional<Role> roleOptional = roleRepository.findById(id);
+    if (roleOptional.isEmpty()) {
+      throw new NotFoundException("Role not found");
+    }
     roleRepository.deleteById(id);
   }
 
@@ -28,8 +38,15 @@ public class RoleService {
     return roleRepository.save(role);
   }
 
-  public Role updateOne(Role role, UUID id) {
-    role.setId(id);
-    return roleRepository.save(role);
+  public Role updateOne(Role newRole, UUID id) {
+    Optional<Role> roleOptional = roleRepository.findById(id);
+    if (roleOptional.isEmpty()) {
+      throw new NotFoundException("Role not found");
+    }
+
+    return roleRepository.findById(id).map(role -> {
+      role.setName(newRole.getName());
+      return roleRepository.save(role);
+    }).orElseGet(() -> roleRepository.save(newRole));
   }
 }

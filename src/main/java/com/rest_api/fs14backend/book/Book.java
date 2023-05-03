@@ -37,18 +37,4 @@ public class Book {
   private Date publishedDate;
   @Column(nullable = false, columnDefinition = "integer default 1")
   private Integer quantity;
-
-  @Override
-  public String toString() {
-    return "Book{" +
-            "id=" + id +
-            ", isbn='" + isbn + '\'' +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", publisher='" + publisher + '\'' +
-            ", status=" + status +
-            ", publishedDate=" + publishedDate +
-            ", quantity=" + quantity +
-            '}';
-  }
 }

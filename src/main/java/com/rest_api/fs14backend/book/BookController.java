@@ -1,10 +1,10 @@
 package com.rest_api.fs14backend.book;
 
-import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,13 +20,8 @@ public class BookController {
   }
 
   @GetMapping("/{id}")
-  public Book findById(@PathVariable UUID id) {
-    Book book = bookService.findById(id);
-
-    if (book == null) {
-      throw new NotFoundException("Book not found");
-    }
-    return book;
+  public Optional<Book> findById(@PathVariable UUID id) {
+    return bookService.findById(id);
   }
 
   @PostMapping
@@ -36,19 +31,11 @@ public class BookController {
 
   @PutMapping("/{id}")
   public Book updateOne(@RequestBody Book book, @PathVariable UUID id) {
-    if (book == null) {
-      throw new NotFoundException("Book not found");
-    }
     return bookService.updateOne(book, id);
   }
 
   @DeleteMapping("/{id}")
   public void deleteOne(@PathVariable UUID id) {
-    Book book = bookService.findById(id);
-    System.out.println(book);
-    if (book == null) {
-      throw new NotFoundException("Book not found");
-    }
     bookService.deleteById(id);
   }
 }
