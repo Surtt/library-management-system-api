@@ -1,11 +1,9 @@
 package com.rest_api.fs14backend.categories;
 
-
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -17,27 +15,19 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category findById(Long id) {
+    public Category findById(UUID id) {
         return categoryRepository.findById(id).orElse(null);
     }
-    @Transactional
-    public void deleteByName(String categoryName) {
-        System.out.println("dele by name is called" + categoryName);
-        categoryRepository.deleteByCategoryname(categoryName);
+    public void deleteById(UUID id) {
+        categoryRepository.deleteById(id);
     }
 
     public Category createOne(Category category) {
         return categoryRepository.save(category);
     }
 
-    @Transactional
-    public Category updateCategory(String categoryName, Category newCategory) {
-        Category existingCategory = categoryRepository.findByCategoryname(categoryName);
-        if (existingCategory == null) {
-            return null;
-        }
-        existingCategory.setCategoryname(newCategory.getCategoryname());
-        Category updatedCategory = categoryRepository.save(existingCategory);
-        return updatedCategory;
+    public Category updateOne(Category category, UUID id) {
+        category.setId(id);
+        return categoryRepository.save(category);
     }
 }

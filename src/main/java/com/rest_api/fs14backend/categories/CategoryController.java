@@ -2,25 +2,24 @@ package com.rest_api.fs14backend.categories;
 
 import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/category")
+@RequestMapping("api/v1/categories")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<Category> findAll() {
         return categoryService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Category findOne(@PathVariable Long id){
+    public Category findOne(@PathVariable UUID id) {
         Category category = categoryService.findById(id);
 
         if (category == null) {
@@ -28,25 +27,26 @@ public class CategoryController {
         }
         return category;
     }
-    //DEVTODO the database table Categories needs to have unique values under categoryname
-    @PostMapping("/")
+
+    @PostMapping
     public Category createOne(@RequestBody Category category) {
-            return categoryService.createOne(category);
-        }
-
-    @DeleteMapping("/{categoryname}")
-    public void delete(@PathVariable String categoryname) {
-
-        categoryService.deleteByName(categoryname);
+        return categoryService.createOne(category);
     }
 
-    @PutMapping("/{categoryname}") //url/api/v1/category/science + Request Body
-    public ResponseEntity<Category> updateOne(@PathVariable String categoryname, @RequestBody Category category) {
-        Category updatedCategory = categoryService.updateCategory(categoryname, category);
-        if (updatedCategory == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(updatedCategory);
+    @PutMapping("/{id}")
+    public Category updateOne(@RequestBody Category category, @PathVariable UUID id) {
+        if (category == null) {
+            throw new NotFoundException("Category not found");
         }
+        return categoryService.updateOne(category, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        Category category = categoryService.findById(id);
+        if (category == null) {
+            throw new NotFoundException("Category not found");
+        }
+        categoryService.deleteById(id);
     }
 }

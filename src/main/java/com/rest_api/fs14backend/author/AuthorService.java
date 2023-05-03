@@ -1,7 +1,5 @@
 package com.rest_api.fs14backend.author;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +32,4 @@ public class AuthorService {
 
         return authorRepository.save(author);
     }
-
-
-
 }
