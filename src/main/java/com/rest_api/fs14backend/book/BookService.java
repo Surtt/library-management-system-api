@@ -1,36 +1,30 @@
 package com.rest_api.fs14backend.book;
 
-import com.rest_api.fs14backend.exceptions.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rest_api.fs14backend.author.Author;
+import com.rest_api.fs14backend.author.AuthorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
-
-  @Autowired
-  private BookRepository bookRepository;
+  private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
 
   public List<Book> findAll() {
     return bookRepository.findAll();
   }
 
-  public Optional<Book> findById(UUID id) {
-    Optional<Book> bookOptional = bookRepository.findById(id);
-    if (bookOptional.isEmpty()) {
-      throw new NotFoundException("Book not found");
-    }
-    return bookRepository.findById(id);
+  public Book findById(UUID id) {
+    return bookRepository.findById(id)
+            .orElse(null);
   }
 
   public void deleteById(UUID id) {
-    Optional<Book> bookOptional = bookRepository.findById(id);
-    if (bookOptional.isEmpty()) {
-      throw new NotFoundException("Book not found");
-    }
     bookRepository.deleteById(id);
   }
 
@@ -39,20 +33,29 @@ public class BookService {
   }
 
   public Book updateOne(Book newBook, UUID id) {
-    Optional<Book> bookOptional = bookRepository.findById(id);
-    if (bookOptional.isEmpty()) {
-      throw new NotFoundException("Book not found");
-    }
+    return bookRepository.findById(id)
+            .map(book -> {
+              book.setIsbn(newBook.getIsbn());
+              book.setTitle(newBook.getTitle());
+              book.setDescription(newBook.getDescription());
+              book.setPublisher(newBook.getPublisher());
+              book.setStatus(newBook.getStatus());
+              book.setPublishedDate(newBook.getPublishedDate());
+              book.setQuantity(newBook.getQuantity());
+              return bookRepository.save(book);
+            })
+            .orElseGet(() -> bookRepository.save(newBook));
+  }
 
-    return bookRepository.findById(id).map(book -> {
-      book.setIsbn(newBook.getIsbn());
-      book.setTitle(newBook.getTitle());
-      book.setDescription(newBook.getDescription());
-      book.setPublisher(newBook.getPublisher());
-      book.setStatus(newBook.getStatus());
-      book.setPublishedDate(newBook.getPublishedDate());
-      book.setQuantity(newBook.getQuantity());
-      return bookRepository.save(book);
-    }).orElseGet(() -> bookRepository.save(newBook));
+  public Book assignAuthorToBook(UUID bookId, UUID authorId) {
+    Set<Author> authorSet = null;
+    Book book = bookRepository.findById(bookId)
+            .get();
+    Author author = authorRepository.findById(authorId)
+            .get();
+    authorSet = book.getAuthors();
+    authorSet.add(author);
+    book.setAuthors(authorSet);
+    return bookRepository.save(book);
   }
 }

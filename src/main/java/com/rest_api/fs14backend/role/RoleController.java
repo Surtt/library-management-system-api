@@ -1,5 +1,6 @@
 package com.rest_api.fs14backend.role;
 
+import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,10 @@ public class RoleController {
 
   @GetMapping("/{id}")
   public Optional<Role> findById(@PathVariable UUID id) {
+    Optional<Role> role = roleService.findById(id);
+    if (role.isEmpty()) {
+      throw new NotFoundException("Role with id " + id + " not found");
+    }
     return roleService.findById(id);
   }
 
@@ -30,12 +35,20 @@ public class RoleController {
   }
 
   @PutMapping("/{id}")
-  public Role updateOne(@RequestBody Role role, @PathVariable UUID id) {
-    return roleService.updateOne(role, id);
+  public Role updateOne(@RequestBody Role newRole, @PathVariable UUID id) {
+    Optional<Role> role = roleService.findById(id);
+    if (role.isEmpty()) {
+      throw new NotFoundException("Role with id " + id + " not found");
+    }
+    return roleService.updateOne(newRole, id);
   }
 
   @DeleteMapping("/{id}")
-  public void deleteOne(@PathVariable UUID id) {
+  public void deleteById(@PathVariable UUID id) {
+    Optional<Role> role = roleService.findById(id);
+    if (role.isEmpty()) {
+      throw new NotFoundException("Role with id " + id + " not found");
+    }
     roleService.deleteById(id);
   }
 }

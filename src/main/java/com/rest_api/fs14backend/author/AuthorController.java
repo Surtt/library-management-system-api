@@ -1,10 +1,10 @@
 package com.rest_api.fs14backend.author;
 
+import com.rest_api.fs14backend.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -19,7 +19,11 @@ public class AuthorController {
   }
 
   @GetMapping("/{id}")
-  public Optional<Author> findById(@PathVariable UUID id) {
+  public Author findById(@PathVariable UUID id) {
+    Author author = authorService.findById(id);
+    if (author == null) {
+      throw new NotFoundException("Author with id " + id + " not found");
+    }
     return authorService.findById(id);
   }
 
@@ -29,12 +33,20 @@ public class AuthorController {
   }
 
   @PutMapping("/{id}")
-  public Author updateOne(@RequestBody Author author, @PathVariable UUID id) {
-    return authorService.updateOne(author, id);
+  public Author updateOne(@RequestBody Author newAuthor, @PathVariable UUID id) {
+    Author author = authorService.findById(id);
+    if (author == null) {
+      throw new NotFoundException("Author with id " + id + " not found");
+    }
+    return authorService.updateOne(newAuthor, id);
   }
 
   @DeleteMapping("/{id}")
   public void deleteOne(@PathVariable UUID id) {
+    Author author = authorService.findById(id);
+    if (author == null) {
+      throw new NotFoundException("Author with id " + id + " not found");
+    }
     authorService.deleteById(id);
   }
 }

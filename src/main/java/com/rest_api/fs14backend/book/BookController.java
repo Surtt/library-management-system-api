@@ -1,18 +1,22 @@
 package com.rest_api.fs14backend.book;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rest_api.fs14backend.category.Category;
+import com.rest_api.fs14backend.category.CategoryService;
+import com.rest_api.fs14backend.exceptions.NotFoundException;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/books")
 public class BookController {
-
-  @Autowired
-  private BookService bookService;
+  private final BookService bookService;
+  private final CategoryService categoryService;
+  private final BookMapper bookMapper;
 
   @GetMapping
   public List<Book> findAll() {
@@ -20,22 +24,42 @@ public class BookController {
   }
 
   @GetMapping("/{id}")
-  public Optional<Book> findById(@PathVariable UUID id) {
+  public Book findById(@PathVariable UUID id) {
+    Book book = bookService.findById(id);
+    if (book == null) {
+      throw new NotFoundException("Book with id " + id + " not found");
+    }
     return bookService.findById(id);
   }
 
   @PostMapping
-  public Book createOne(@RequestBody Book book) {
+  public Book createOne(@RequestBody @Valid BookDTO bookDTO) {
+    UUID categoryId = bookDTO.getCategoryId();
+    Category category = categoryService.findById(categoryId);
+    Book book = bookMapper.toBook(bookDTO, category);
     return bookService.createOne(book);
   }
 
   @PutMapping("/{id}")
-  public Book updateOne(@RequestBody Book book, @PathVariable UUID id) {
-    return bookService.updateOne(book, id);
+  public Book updateOne(@RequestBody Book newBook, @PathVariable UUID id) {
+    Book book = bookService.findById(id);
+    if (book == null) {
+      throw new NotFoundException("Book with id " + id + " not found");
+    }
+    return bookService.updateOne(newBook, id);
   }
 
   @DeleteMapping("/{id}")
   public void deleteOne(@PathVariable UUID id) {
+    Book book = bookService.findById(id);
+    if (book == null) {
+      throw new NotFoundException("Book with id " + id + " not found");
+    }
     bookService.deleteById(id);
+  }
+
+  @PutMapping("{bookId}/author/{authorId}")
+  public Book assignAuthorToBook(@PathVariable UUID bookId, @PathVariable UUID authorId) {
+    return bookService.assignAuthorToBook(bookId, authorId);
   }
 }

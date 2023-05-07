@@ -1,4 +1,4 @@
-package com.rest_api.fs14backend.categories;
+package com.rest_api.fs14backend.category;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,7 @@ public class Category {
   @UuidGenerator
   @GeneratedValue
   private UUID id;
+
   @Column(nullable = false, columnDefinition = "varchar(50)")
   private String name;
 }
