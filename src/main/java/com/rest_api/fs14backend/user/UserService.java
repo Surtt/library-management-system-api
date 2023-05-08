@@ -2,7 +2,11 @@ package com.rest_api.fs14backend.user;
 
 import com.rest_api.fs14backend.role.Role;
 import com.rest_api.fs14backend.role.RoleRepository;
+import com.rest_api.fs14backend.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +18,36 @@ import java.util.stream.Collectors;
 public class UserService {
 
   private final UserDTOMapper userDTOMapper;
+  //  private final UserDTOMapper userDTOMapper;
   @Autowired
   private UserRepository userRepository;
   @Autowired
   private RoleRepository roleRepository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+  @Autowired
+  private AuthenticationManager authenticationManager;
+  @Autowired
+  private JwtUtils jwtUtils;
 
   public UserService(UserDTOMapper userDTOMapper) {
     this.userDTOMapper = userDTOMapper;
+  }
+
+  public String signIn(AuthRequest authRequest) {
+    authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+
+    User user = userRepository.findByEmail(authRequest.getEmail());
+
+    return jwtUtils.generateToken(user);
+  }
+
+  public User signUp(User user) {
+    User newUser = new User(user.getFirstName(), user.getLastName(), user.getEmail(),
+            passwordEncoder.encode(user.getPassword()), user.getRoles());
+    return userRepository.save(newUser);
+
   }
 
   public List<UserDTO> findAll() {

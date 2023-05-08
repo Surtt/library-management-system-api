@@ -9,16 +9,25 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/users")
 public class UserController {
   private final UserService userService;
 
-  @GetMapping
+  @PostMapping("/signin")
+  public String signIn(@RequestBody AuthRequest authRequest) {
+    return userService.signIn(authRequest);
+  }
+
+  @PostMapping("/signup")
+  public User signUp(@RequestBody User user) {
+    return userService.signUp(user);
+  }
+
+  @GetMapping("api/v1/users")
   public List<UserDTO> findAll() {
     return userService.findAll();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("api/v1/users/{id}")
   public UserDTO findById(@PathVariable UUID id) {
     UserDTO user = userService.findById(id);
     if (user == null) {
@@ -27,12 +36,12 @@ public class UserController {
     return user;
   }
 
-  @PostMapping
+  @PostMapping("api/v1/users")
   public User createOne(@RequestBody User user) {
     return userService.createOne(user);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("api/v1/users/{id}")
   public void deleteOne(@PathVariable UUID id) {
     UserDTO user = userService.findById(id);
     if (user == null) {
@@ -41,7 +50,7 @@ public class UserController {
     userService.deleteById(id);
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("api/v1/users/{id}")
   public User updateOne(@RequestBody User user, @PathVariable UUID id) {
     if (user == null) {
       throw new NotFoundException("User with id " + id + " not found");
@@ -49,7 +58,7 @@ public class UserController {
     return userService.updateOne(user, id);
   }
 
-  @PutMapping("{userId}/role/{roleId}")
+  @PutMapping("api/v1/users/{userId}/role/{roleId}")
   public User assignRoleToUser(@PathVariable UUID userId, @PathVariable UUID roleId) {
     return userService.assignRoleToUser(userId, roleId);
   }
