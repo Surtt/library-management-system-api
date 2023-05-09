@@ -3,7 +3,7 @@ package com.rest_api.fs14backend.user;
 import com.rest_api.fs14backend.role.Role;
 import com.rest_api.fs14backend.role.RoleRepository;
 import com.rest_api.fs14backend.utils.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,24 +15,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
   private final UserDTOMapper userDTOMapper;
-  //  private final UserDTOMapper userDTOMapper;
-  @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private RoleRepository roleRepository;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-  @Autowired
-  private AuthenticationManager authenticationManager;
-  @Autowired
-  private JwtUtils jwtUtils;
-
-  public UserService(UserDTOMapper userDTOMapper) {
-    this.userDTOMapper = userDTOMapper;
-  }
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
+  private final JwtUtils jwtUtils;
 
   public String signIn(AuthRequest authRequest) {
     authenticationManager.authenticate(

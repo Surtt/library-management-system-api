@@ -44,21 +44,11 @@ public class User {
   @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-  public User(String email, String password) {
-    this.email = email;
-    this.password = password;
-  }
-
   public User(String firstName, String lastName, String email, String password, Set<Role> roles) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
     this.roles = roles;
-  }
-
-  @Override
-  public String toString() {
-    return "User{" + "id=" + id + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", email='" + email + '\'' + ", password='" + password + '\'' + ", roles=" + roles + '}';
   }
 }

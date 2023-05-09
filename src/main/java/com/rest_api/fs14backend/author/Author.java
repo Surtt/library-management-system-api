@@ -1,6 +1,7 @@
 package com.rest_api.fs14backend.author;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rest_api.fs14backend.base.BaseEntity;
 import com.rest_api.fs14backend.book.Book;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
+public class Author extends BaseEntity {
   @Id
   @Column
   @UuidGenerator
@@ -28,7 +29,7 @@ public class Author {
   private String name;
 
   @JsonIgnore
-  @ManyToMany(mappedBy = "authors")
+  @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
   private Set<Book> books = new HashSet<>();
 
   @Override
@@ -46,5 +47,10 @@ public class Author {
   @Override
   public int hashCode() {
     return Objects.hash(id);
+  }
+
+  @Override
+  public String toString() {
+    return "Author{" + "id=" + id + ", name='" + name + '\'' + ", books=" + books + ", createdBy='" + createdBy + '\'' + ", createdDate=" + createdDate + ", modifiedBy='" + modifiedBy + '\'' + ", modifiedDate=" + modifiedDate + '}';
   }
 }

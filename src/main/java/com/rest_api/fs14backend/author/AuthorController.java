@@ -1,17 +1,17 @@
 package com.rest_api.fs14backend.author;
 
 import com.rest_api.fs14backend.exceptions.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/authors")
 public class AuthorController {
-  @Autowired
-  private AuthorService authorService;
+  private final AuthorService authorService;
 
   @GetMapping
   public List<Author> findAll() {
@@ -24,7 +24,7 @@ public class AuthorController {
     if (author == null) {
       throw new NotFoundException("Author with id " + id + " not found");
     }
-    return authorService.findById(id);
+    return author;
   }
 
   @PostMapping

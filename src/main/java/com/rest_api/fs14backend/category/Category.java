@@ -1,5 +1,6 @@
 package com.rest_api.fs14backend.category;
 
+import com.rest_api.fs14backend.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Category extends BaseEntity {
   @Id
   @Column
   @UuidGenerator

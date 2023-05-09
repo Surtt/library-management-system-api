@@ -33,7 +33,11 @@ public class BookDTO {
   @NotNull(message = "categoryId is mandatory")
   private UUID categoryId;
 
-  public BookDTO(UUID categoryId) {
+  @NotNull(message = "authorId is mandatory")
+  private UUID authorId;
+
+  public BookDTO(UUID categoryId, UUID authorId) {
     this.categoryId = categoryId;
+    this.authorId = authorId;
   }
 }

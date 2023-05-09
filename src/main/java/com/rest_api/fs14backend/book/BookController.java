@@ -1,5 +1,7 @@
 package com.rest_api.fs14backend.book;
 
+import com.rest_api.fs14backend.author.Author;
+import com.rest_api.fs14backend.author.AuthorService;
 import com.rest_api.fs14backend.category.Category;
 import com.rest_api.fs14backend.category.CategoryService;
 import com.rest_api.fs14backend.exceptions.NotFoundException;
@@ -7,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +19,7 @@ import java.util.UUID;
 public class BookController {
   private final BookService bookService;
   private final CategoryService categoryService;
+  private final AuthorService authorService;
   private final BookMapper bookMapper;
 
   @GetMapping
@@ -29,14 +33,24 @@ public class BookController {
     if (book == null) {
       throw new NotFoundException("Book with id " + id + " not found");
     }
-    return bookService.findById(id);
+    return book;
   }
 
   @PostMapping
-  public Book createOne(@RequestBody @Valid BookDTO bookDTO) {
+  public Book createOne(@RequestBody @Valid BookDTO bookDTO) throws Exception {
     UUID categoryId = bookDTO.getCategoryId();
+    UUID authorId = bookDTO.getAuthorId();
+
     Category category = categoryService.findById(categoryId);
+    Author author = authorService.findById(authorId);
+
     Book book = bookMapper.toBook(bookDTO, category);
+    Boolean isAuthorExist = Collections.singletonList(book.getAuthors())
+            .contains(author);
+    if (isAuthorExist) {
+      throw new Exception("This author already exists");
+    }
+    book.addAuthor(author);
     return bookService.createOne(book);
   }
 

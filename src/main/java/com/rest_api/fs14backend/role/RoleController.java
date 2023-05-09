@@ -1,19 +1,17 @@
 package com.rest_api.fs14backend.role;
 
 import com.rest_api.fs14backend.exceptions.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/roles")
 public class RoleController {
-
-  @Autowired
-  private RoleService roleService;
+  private final RoleService roleService;
 
   @GetMapping
   public List<Role> findAll() {
@@ -21,12 +19,12 @@ public class RoleController {
   }
 
   @GetMapping("/{id}")
-  public Optional<Role> findById(@PathVariable UUID id) {
-    Optional<Role> role = roleService.findById(id);
-    if (role.isEmpty()) {
+  public Role findById(@PathVariable UUID id) {
+    Role role = roleService.findById(id);
+    if (role == null) {
       throw new NotFoundException("Role with id " + id + " not found");
     }
-    return roleService.findById(id);
+    return role;
   }
 
   @PostMapping
@@ -36,8 +34,8 @@ public class RoleController {
 
   @PutMapping("/{id}")
   public Role updateOne(@RequestBody Role newRole, @PathVariable UUID id) {
-    Optional<Role> role = roleService.findById(id);
-    if (role.isEmpty()) {
+    Role role = roleService.findById(id);
+    if (role == null) {
       throw new NotFoundException("Role with id " + id + " not found");
     }
     return roleService.updateOne(newRole, id);
@@ -45,8 +43,8 @@ public class RoleController {
 
   @DeleteMapping("/{id}")
   public void deleteById(@PathVariable UUID id) {
-    Optional<Role> role = roleService.findById(id);
-    if (role.isEmpty()) {
+    Role role = roleService.findById(id);
+    if (role == null) {
       throw new NotFoundException("Role with id " + id + " not found");
     }
     roleService.deleteById(id);

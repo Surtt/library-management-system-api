@@ -1,15 +1,15 @@
 package com.rest_api.fs14backend.author;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
-  @Autowired
-  private AuthorRepository authorRepository;
+  private final AuthorRepository authorRepository;
 
   public List<Author> findAll() {
     return authorRepository.findAll();

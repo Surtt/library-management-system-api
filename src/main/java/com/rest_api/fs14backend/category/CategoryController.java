@@ -2,21 +2,18 @@ package com.rest_api.fs14backend.category;
 
 import com.rest_api.fs14backend.book.BookService;
 import com.rest_api.fs14backend.exceptions.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/v1/categories")
 public class CategoryController {
-
-  @Autowired
-  private CategoryService categoryService;
-
-  @Autowired
-  private BookService bookService;
+  private final CategoryService categoryService;
+  private final BookService bookService;
 
   @GetMapping
   public List<Category> findAll() {
@@ -29,7 +26,7 @@ public class CategoryController {
     if (category == null) {
       throw new NotFoundException("Category with id " + id + " not found");
     }
-    return categoryService.findById(id);
+    return category;
   }
 
   @PostMapping

@@ -1,6 +1,7 @@
 package com.rest_api.fs14backend.book;
 
 import com.rest_api.fs14backend.author.Author;
+import com.rest_api.fs14backend.base.BaseEntity;
 import com.rest_api.fs14backend.category.Category;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @Table(name = "book")
 @Data
 @NoArgsConstructor
-public class Book {
+public class Book extends BaseEntity {
   @Id
   @UuidGenerator
   @GeneratedValue
@@ -45,6 +46,7 @@ public class Book {
   private Integer quantity;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  @JoinColumn(name = "category_id")
   private Category category;
 
   @ManyToMany
@@ -60,5 +62,23 @@ public class Book {
     this.publishedDate = publishedDate;
     this.quantity = quantity;
     this.category = category;
+  }
+
+  public void addAuthor(Author author) {
+    this.authors.add(author);
+    author.getBooks()
+            .add(this);
+  }
+
+  public void removeAuthor(UUID authorId) {
+    Author author = this.authors.stream()
+            .filter(a -> a.getId() == authorId)
+            .findFirst()
+            .orElse(null);
+    if (author != null) {
+      this.authors.remove(author);
+      author.getBooks()
+              .remove(this);
+    }
   }
 }

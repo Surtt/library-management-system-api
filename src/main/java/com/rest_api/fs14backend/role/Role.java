@@ -1,6 +1,7 @@
 package com.rest_api.fs14backend.role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rest_api.fs14backend.base.BaseEntity;
 import com.rest_api.fs14backend.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class Role extends BaseEntity {
   @Id
   @Column
   @UuidGenerator
