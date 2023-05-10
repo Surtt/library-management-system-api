@@ -1,17 +1,16 @@
 package com.rest_api.fs14backend.book;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest_api.fs14backend.author.Author;
 import com.rest_api.fs14backend.base.BaseEntity;
+import com.rest_api.fs14backend.bookCopy.BookCopy;
 import com.rest_api.fs14backend.category.Category;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity(name = "book")
@@ -42,8 +41,8 @@ public class Book extends BaseEntity {
   @Temporal(TemporalType.DATE)
   private Date publishedDate;
 
-  @Column(nullable = false, columnDefinition = "integer default 1")
-  private Integer quantity;
+  @Column(nullable = false, columnDefinition = "integer default 0")
+  private Integer quantity = 0;
 
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
@@ -53,14 +52,16 @@ public class Book extends BaseEntity {
   @JoinTable(name = "book_author", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
   private Set<Author> authors = new HashSet<>();
 
-  public Book(String isbn, String title, String description, String publisher, Boolean status, Date publishedDate, Integer quantity, Category category) {
+  @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JsonIgnore
+  private List<BookCopy> bookCopyList = new ArrayList<>();
+
+  public Book(String isbn, String title, String description, String publisher, Date publishedDate, Category category, UUID authorId) {
     this.isbn = isbn;
     this.title = title;
     this.description = description;
     this.publisher = publisher;
-    this.status = status;
     this.publishedDate = publishedDate;
-    this.quantity = quantity;
     this.category = category;
   }
 
@@ -80,5 +81,17 @@ public class Book extends BaseEntity {
       author.getBooks()
               .remove(this);
     }
+  }
+
+  public void decreaseBookQuantity() {
+    int length = this.getBookCopyList()
+            .size();
+    this.setQuantity(length);
+  }
+
+  public void increaseBookQuantity() {
+    int length = this.getBookCopyList()
+            .size();
+    this.setQuantity(length);
   }
 }

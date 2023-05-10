@@ -1,6 +1,8 @@
 package com.rest_api.fs14backend.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rest_api.fs14backend.checkout.Checkout;
 import com.rest_api.fs14backend.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,9 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 @Entity(name = "user")
@@ -43,6 +43,10 @@ public class User {
   @ManyToMany
   @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JsonIgnore
+  private List<Checkout> checkoutList = new ArrayList<>();
 
   public User(String firstName, String lastName, String email, String password, Set<Role> roles) {
     this.firstName = firstName;

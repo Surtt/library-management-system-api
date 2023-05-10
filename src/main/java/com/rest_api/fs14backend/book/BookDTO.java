@@ -21,14 +21,10 @@ public class BookDTO {
   private String title;
 
   private String description;
+
   private String publisher;
 
-  @NotNull(message = "status is mandatory")
-  private Boolean status;
   private Date publishedDate;
-
-  @NotNull(message = "quantity is mandatory")
-  private Integer quantity;
 
   @NotNull(message = "categoryId is mandatory")
   private UUID categoryId;
