@@ -47,9 +47,8 @@ public class UserService {
             .collect(Collectors.toList());
   }
 
-  public UserDTO findById(UUID id) {
+  public User findById(UUID id) {
     return userRepository.findById(id)
-            .map(userDTOMapper)
             .orElse(null);
   }
 

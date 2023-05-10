@@ -15,6 +15,15 @@ public class BookCopyController {
   private final BookService bookService;
   private final BookCopyMapper bookCopyMapper;
 
+  @GetMapping("/{id}")
+  public BookCopy findById(@PathVariable UUID id) {
+    BookCopy bookCopy = bookCopyService.findById(id);
+    if (bookCopy == null) {
+      throw new NotFoundException("Book Copy with id " + id + " not found");
+    }
+    return bookCopy;
+  }
+
   @PostMapping
   public BookCopy addOneBookCopy(@RequestBody BookCopyDTO bookCopyDTO) {
     return bookCopyService.addOneBookCopy(bookCopyDTO);

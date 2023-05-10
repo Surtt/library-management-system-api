@@ -32,8 +32,13 @@ public class Checkout {
   private User user;
 
   @DateTimeFormat
-  private Date borrowDate;
+  private Date borrowDate = new Date();
 
   @DateTimeFormat
   private Date returnDate;
+
+  public Checkout(BookCopy bookCopy, User user) {
+    this.bookCopy = bookCopy;
+    this.user = user;
+  }
 }

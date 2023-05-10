@@ -28,8 +28,8 @@ public class UserController {
   }
 
   @GetMapping("api/v1/users/{id}")
-  public UserDTO findById(@PathVariable UUID id) {
-    UserDTO user = userService.findById(id);
+  public User findById(@PathVariable UUID id) {
+    User user = userService.findById(id);
     if (user == null) {
       throw new NotFoundException("User with id " + id + " not found");
     }
@@ -43,7 +43,7 @@ public class UserController {
 
   @DeleteMapping("api/v1/users/{id}")
   public void deleteOne(@PathVariable UUID id) {
-    UserDTO user = userService.findById(id);
+    User user = userService.findById(id);
     if (user == null) {
       throw new NotFoundException("User with id " + id + " not found");
     }
