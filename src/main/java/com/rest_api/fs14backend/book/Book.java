@@ -33,6 +33,9 @@ public class Book extends BaseEntity {
   @Column(nullable = false)
   private String description;
 
+  @Column(nullable = false)
+  private String image;
+
   @Column(nullable = false, columnDefinition = "varchar(20)")
   private String publisher;
 
@@ -57,10 +60,11 @@ public class Book extends BaseEntity {
   @JsonIgnore
   private List<BookCopy> bookCopyList = new ArrayList<>();
 
-  public Book(String isbn, String title, String description, String publisher, Date publishedDate, Category category, UUID authorId) {
+  public Book(String isbn, String title, String description, String image, String publisher, Date publishedDate, Category category, UUID authorId) {
     this.isbn = isbn;
     this.title = title;
     this.description = description;
+    this.image = image;
     this.publisher = publisher;
     this.publishedDate = publishedDate;
     this.category = category;

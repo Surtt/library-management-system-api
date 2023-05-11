@@ -22,6 +22,7 @@ public class BookController {
   private final AuthorService authorService;
   private final BookMapper bookMapper;
 
+  @CrossOrigin
   @GetMapping
   public List<Book> findAll() {
     return bookService.findAll();

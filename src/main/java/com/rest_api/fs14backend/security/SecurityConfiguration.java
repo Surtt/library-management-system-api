@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
@@ -36,13 +35,17 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
+    http.cors()
+            .and()
+            .csrf()
             .disable()
             .authorizeHttpRequests()
-            .requestMatchers("/signup", "/signin")
+            .requestMatchers("/signup", "/signin", "/api/v1/books/**")
+            .permitAll()
+            .requestMatchers(antMatcher(HttpMethod.GET, "/api/v1/books/**"))
             .permitAll()
             .requestMatchers("/api/v1/authors/**", "/api/v1/categories/**", "/api/v1/roles/**", "/api/v1/users/**",
-                    "/api/v1/borrow/**")
+                    "/api/v1/books/borrow/**", "/api/v1/books/return/**", "/api/v1/books/book-copy")
             .hasRole("ADMIN")
             .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/books/**"),
                     antMatcher(HttpMethod.PUT, "/api/v1/books/**"), antMatcher(HttpMethod.DELETE, "/api/v1/books/**"))
@@ -53,9 +56,9 @@ public class SecurityConfiguration {
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .httpBasic(withDefaults())
-            .formLogin()
-            .and()
+//            .httpBasic(withDefaults())
+//            .formLogin()
+//            .and()
             // Add JWT token filter
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
