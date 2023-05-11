@@ -9,9 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,18 +22,24 @@ public class UserService {
   private final AuthenticationManager authenticationManager;
   private final JwtUtils jwtUtils;
 
-  public String signIn(AuthRequest authRequest) {
+  public Map<String, String> signIn(AuthRequest authRequest) {
+    Map<String, String> token = new HashMap<>();
     authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
     User user = userRepository.findByEmail(authRequest.getEmail());
-
-    return jwtUtils.generateToken(user);
+    token.put("token", jwtUtils.generateToken(user));
+    return token;
   }
 
   public User signUp(User user) {
+    Set<Role> roleSet = null;
     User newUser = new User(user.getFirstName(), user.getLastName(), user.getEmail(),
             passwordEncoder.encode(user.getPassword()), user.getRoles());
+    Role role = roleRepository.findByName("ROLE_READER");
+    roleSet = newUser.getRoles();
+    roleSet.add(role);
+    newUser.setRoles(roleSet);
     return userRepository.save(newUser);
 
   }

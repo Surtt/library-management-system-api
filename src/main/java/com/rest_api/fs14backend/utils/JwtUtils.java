@@ -4,6 +4,8 @@ import com.rest_api.fs14backend.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,14 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtils {
-  final String secret = "ThisIsAMuchLongerPasswordOhBoysDoINeedMoreCharacters";
+  @Autowired
+  private Environment environment;
 
-  // secret variable to be moved to .env
   public String generateToken(User user) {
     Map<String, Object> claims = new HashMap<>();
     claims.put("user_id", user.getId());
     claims.put("email", user.getEmail());
+    claims.put("role", user.getRoles());
 
     return createToken(claims, user.getEmail());
   }
@@ -31,7 +34,7 @@ public class JwtUtils {
             .setSubject(subject)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-            .signWith(SignatureAlgorithm.HS256, secret)
+            .signWith(SignatureAlgorithm.HS256, environment.getProperty("JWT_SECRET"))
             .compact();
 
   }
@@ -51,7 +54,7 @@ public class JwtUtils {
 
   private Claims extractAllClaims(String token) {
     return Jwts.parser()
-            .setSigningKey(secret)
+            .setSigningKey(environment.getProperty("JWT_SECRET"))
             .parseClaimsJws(token)
             .getBody();
   }

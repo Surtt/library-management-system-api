@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -13,7 +14,7 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/signin")
-  public String signIn(@RequestBody AuthRequest authRequest) {
+  public Map<String, String> signIn(@RequestBody AuthRequest authRequest) {
     return userService.signIn(authRequest);
   }
 

@@ -45,7 +45,7 @@ public class Book extends BaseEntity {
   @Column(nullable = false, columnDefinition = "integer default 0")
   private Integer quantity = 0;
 
-  @ManyToOne(optional = false, fetch = FetchType.EAGER)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private Category category;
 
@@ -64,6 +64,10 @@ public class Book extends BaseEntity {
     this.publisher = publisher;
     this.publishedDate = publishedDate;
     this.category = category;
+  }
+
+  public UUID getCategory() {
+    return category.getId();
   }
 
   public void addAuthor(Author author) {
