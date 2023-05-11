@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.*;
 
@@ -38,7 +39,7 @@ public class Book extends BaseEntity {
   @Column(nullable = false, columnDefinition = "boolean default true")
   private Boolean status = true;
 
-  @Temporal(TemporalType.DATE)
+  @DateTimeFormat
   private Date publishedDate;
 
   @Column(nullable = false, columnDefinition = "integer default 0")

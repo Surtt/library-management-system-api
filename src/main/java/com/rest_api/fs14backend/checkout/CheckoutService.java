@@ -7,6 +7,7 @@ import com.rest_api.fs14backend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +45,27 @@ public class CheckoutService {
     bookCopyList.remove(bookCopy);
     bookCopy.getBook()
             .decreaseBookQuantity();
+    return checkoutRepository.save(checkout);
+  }
+
+  public Checkout returnBook(CheckoutDTO checkoutDTO, UUID checkoutId) {
+    List<Checkout> checkoutList = null;
+
+    Checkout checkout = checkoutRepository.findById(checkoutId)
+            .get();
+
+    checkout.setReturnDate(new Date());
+
+    UUID bookCopyId = checkoutDTO.getBookCopyId();
+    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
+            .get();
+
+    checkoutList = bookCopy.getCheckoutList();
+    checkoutList.remove(checkout);
+    bookCopy.setCheckoutList(checkoutList);
+    bookCopy.getBook()
+            .increaseBookQuantity();
+    checkout.setReturnDate(new Date());
     return checkoutRepository.save(checkout);
   }
 }

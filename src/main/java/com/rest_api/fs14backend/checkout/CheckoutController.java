@@ -1,10 +1,9 @@
 package com.rest_api.fs14backend.checkout;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,8 +13,11 @@ public class CheckoutController {
 
   @PostMapping("/borrow")
   public Checkout borrowBook(@RequestBody CheckoutDTO checkoutDTO) {
-
     return checkoutService.borrowBook(checkoutDTO);
+  }
 
+  @PutMapping("/return/{checkoutId}")
+  public Checkout returnBook(@RequestBody CheckoutDTO checkoutDTO, @PathVariable UUID checkoutId) {
+    return checkoutService.returnBook(checkoutDTO, checkoutId);
   }
 }
