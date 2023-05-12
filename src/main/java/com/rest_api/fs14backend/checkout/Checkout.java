@@ -37,6 +37,9 @@ public class Checkout {
   @DateTimeFormat
   private Date returnDate;
 
+  @Column(nullable = false, columnDefinition = "boolean default false")
+  private Boolean isReturned = false;
+
   public Checkout(BookCopy bookCopy, User user) {
     this.bookCopy = bookCopy;
     this.user = user;

@@ -35,7 +35,7 @@ public class UserService {
   public User signUp(User user) {
     Set<Role> roleSet = null;
     User newUser = new User(user.getFirstName(), user.getLastName(), user.getEmail(),
-            passwordEncoder.encode(user.getPassword()), user.getRoles());
+            passwordEncoder.encode(user.getPassword()));
     Role role = roleRepository.findByName("ROLE_READER");
     roleSet = newUser.getRoles();
     roleSet.add(role);

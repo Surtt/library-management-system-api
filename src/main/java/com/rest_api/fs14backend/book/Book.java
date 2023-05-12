@@ -40,7 +40,7 @@ public class Book extends BaseEntity {
   private String publisher;
 
   @Column(nullable = false, columnDefinition = "boolean default true")
-  private Boolean status = true;
+  private Boolean status = false;
 
   @DateTimeFormat
   private Date publishedDate;

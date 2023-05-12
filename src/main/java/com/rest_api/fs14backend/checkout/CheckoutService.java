@@ -43,8 +43,15 @@ public class CheckoutService {
     bookCopyList = bookCopy.getBook()
             .getBookCopyList();
     bookCopyList.remove(bookCopy);
+    bookCopy.setStatus(false);
     bookCopy.getBook()
             .decreaseBookQuantity();
+    int quantityBookCopies = bookCopy.getBook()
+            .getQuantity();
+    if (quantityBookCopies < 1) {
+      bookCopy.getBook()
+              .setStatus(false);
+    }
     return checkoutRepository.save(checkout);
   }
 
@@ -63,9 +70,17 @@ public class CheckoutService {
     checkoutList = bookCopy.getCheckoutList();
     checkoutList.remove(checkout);
     bookCopy.setCheckoutList(checkoutList);
+    bookCopy.setStatus(true);
     bookCopy.getBook()
             .increaseBookQuantity();
     checkout.setReturnDate(new Date());
+    checkout.setIsReturned(true);
+    int quantityBookCopies = bookCopy.getBook()
+            .getQuantity();
+    if (quantityBookCopies > 0) {
+      bookCopy.getBook()
+              .setStatus(true);
+    }
     return checkoutRepository.save(checkout);
   }
 }

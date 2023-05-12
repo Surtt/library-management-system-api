@@ -23,6 +23,9 @@ public class BookCopy {
   @GeneratedValue
   private UUID id;
 
+  @Column(nullable = false, columnDefinition = "boolean default true")
+  private Boolean status = true;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "book_id")
   private Book book;

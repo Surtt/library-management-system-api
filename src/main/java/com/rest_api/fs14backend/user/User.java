@@ -48,11 +48,16 @@ public class User {
   @JsonIgnore
   private List<Checkout> checkoutList = new ArrayList<>();
 
-  public User(String firstName, String lastName, String email, String password, Set<Role> roles) {
+  public User(String firstName, String lastName, String email, String password) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.password = password;
-    this.roles = roles;
   }
+
+//  public List<String> getRoles() {
+//    return roles.stream()
+//            .map(Role::getName)
+//            .collect(Collectors.toList());
+//  }
 }

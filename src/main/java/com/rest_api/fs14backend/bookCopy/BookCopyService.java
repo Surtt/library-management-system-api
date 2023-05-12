@@ -30,6 +30,10 @@ public class BookCopyService {
     bookCopyList = book.getBookCopyList();
     bookCopyList.add(bookCopy);
     book.setBookCopyList(bookCopyList);
+    int quantityBookCopies = book.getQuantity();
+    if (quantityBookCopies == 0) {
+      book.setStatus(true);
+    }
     book.increaseBookQuantity();
     return bookCopyRepository.save(bookCopy);
   }
