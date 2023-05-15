@@ -56,6 +56,10 @@ public class UserService {
             .orElse(null);
   }
 
+  public User getMe(String email) {
+    return userRepository.findByEmail(email);
+  }
+
   public void deleteById(UUID id) {
     userRepository.deleteById(id);
   }

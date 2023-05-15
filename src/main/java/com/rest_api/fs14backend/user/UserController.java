@@ -4,6 +4,7 @@ import com.rest_api.fs14backend.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -36,6 +37,11 @@ public class UserController {
       throw new NotFoundException("User with id " + id + " not found");
     }
     return user;
+  }
+
+  @GetMapping("users/me")
+  public User getMe(Principal principal) {
+    return userService.getMe(principal.getName());
   }
 
   @PostMapping("/users")
