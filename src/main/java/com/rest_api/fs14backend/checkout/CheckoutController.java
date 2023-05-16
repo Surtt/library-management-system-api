@@ -3,6 +3,7 @@ package com.rest_api.fs14backend.checkout;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,5 +20,10 @@ public class CheckoutController {
   @PutMapping("/return/{checkoutId}")
   public Checkout returnBook(@RequestBody CheckoutDTO checkoutDTO, @PathVariable UUID checkoutId) {
     return checkoutService.returnBook(checkoutDTO, checkoutId);
+  }
+
+  @GetMapping("/checkouts/{userId}")
+  public List<Checkout> checkoutsByUserId(@PathVariable UUID userId) {
+    return checkoutService.checkoutsByUserId(userId);
   }
 }

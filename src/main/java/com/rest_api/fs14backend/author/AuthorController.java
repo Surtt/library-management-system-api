@@ -42,7 +42,7 @@ public class AuthorController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteOne(@PathVariable UUID id) {
+  public void deleteOne(@PathVariable UUID id) throws Exception {
     Author author = authorService.findById(id);
     if (author == null) {
       throw new NotFoundException("Author with id " + id + " not found");

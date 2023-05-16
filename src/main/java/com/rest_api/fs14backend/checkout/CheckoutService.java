@@ -20,67 +20,57 @@ public class CheckoutService {
   private final CheckoutMapper checkoutMapper;
 
   public Checkout findById(UUID id) {
-    return checkoutRepository.findById(id)
-            .orElse(null);
+    return checkoutRepository.findById(id).orElse(null);
   }
 
   public Checkout borrowBook(CheckoutDTO checkoutDTO) {
     List<Checkout> checkoutList = null;
     List<BookCopy> bookCopyList = null;
     UUID bookCopyId = checkoutDTO.getBookCopyId();
-    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
-            .get();
+    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).get();
 
     UUID userId = checkoutDTO.getUserId();
-    User user = userRepository.findById(userId)
-            .get();
+    User user = userRepository.findById(userId).get();
 
     Checkout checkout = checkoutMapper.toCheckout(bookCopy, user);
 
     checkoutList = bookCopy.getCheckoutList();
     checkoutList.add(checkout);
     bookCopy.setCheckoutList(checkoutList);
-    bookCopyList = bookCopy.getBook()
-            .getBookCopyList();
-    bookCopyList.remove(bookCopy);
     bookCopy.setStatus(false);
-    bookCopy.getBook()
-            .decreaseBookQuantity();
-    int quantityBookCopies = bookCopy.getBook()
-            .getQuantity();
+    bookCopy.getBook().decreaseBookQuantity();
+    int quantityBookCopies = bookCopy.getBook().getQuantity();
     if (quantityBookCopies < 1) {
-      bookCopy.getBook()
-              .setStatus(false);
+      bookCopy.getBook().setStatus(false);
     }
+    bookCopyRepository.save(bookCopy);
     return checkoutRepository.save(checkout);
   }
 
   public Checkout returnBook(CheckoutDTO checkoutDTO, UUID checkoutId) {
     List<Checkout> checkoutList = null;
 
-    Checkout checkout = checkoutRepository.findById(checkoutId)
-            .get();
-
-    checkout.setReturnDate(new Date());
+    Checkout checkout = checkoutRepository.findById(checkoutId).get();
 
     UUID bookCopyId = checkoutDTO.getBookCopyId();
-    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
-            .get();
+    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).get();
 
     checkoutList = bookCopy.getCheckoutList();
     checkoutList.remove(checkout);
     bookCopy.setCheckoutList(checkoutList);
     bookCopy.setStatus(true);
-    bookCopy.getBook()
-            .increaseBookQuantity();
+    bookCopy.getBook().increaseBookQuantity();
     checkout.setReturnDate(new Date());
     checkout.setIsReturned(true);
-    int quantityBookCopies = bookCopy.getBook()
-            .getQuantity();
+    int quantityBookCopies = bookCopy.getBook().getQuantity();
     if (quantityBookCopies > 0) {
-      bookCopy.getBook()
-              .setStatus(true);
+      bookCopy.getBook().setStatus(true);
     }
+    bookCopyRepository.save(bookCopy);
     return checkoutRepository.save(checkout);
+  }
+
+  public List<Checkout> checkoutsByUserId(UUID userId) {
+    return checkoutRepository.findByUserId(userId);
   }
 }

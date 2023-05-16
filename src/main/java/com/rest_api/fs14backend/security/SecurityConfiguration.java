@@ -43,7 +43,8 @@ public class SecurityConfiguration {
             .requestMatchers(antMatcher(HttpMethod.GET, "/api/v1/books/**"))
             .permitAll()
             .requestMatchers("/api/v1/authors/**", "/api/v1/categories/**", "/api/v1/roles/**", "/api/v1/users/**",
-                    "/api/v1/books/borrow/**", "/api/v1/books/return/**", "/api/v1/books/book-copy")
+                    "/api/v1/books/borrow/**", "/api/v1/books/return/**", "/api/v1/books/book-copy",
+                    "/api/v1/books/checkouts/**")
             .hasRole("ADMIN")
             .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/books/**"),
                     antMatcher(HttpMethod.PUT, "/api/v1/books/**"), antMatcher(HttpMethod.DELETE, "/api/v1/books/**"))

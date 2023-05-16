@@ -44,7 +44,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("/{id}")
-  public void deleteById(@PathVariable UUID id) {
+  public void deleteById(@PathVariable UUID id) throws Exception {
     Category category = categoryService.findById(id);
     if (category == null) {
       throw new NotFoundException("Category with id " + id + " not found");

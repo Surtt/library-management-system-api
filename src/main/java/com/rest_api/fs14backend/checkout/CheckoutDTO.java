@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -19,9 +18,4 @@ public class CheckoutDTO {
 
   @NotNull(message = "User Id is mandatory")
   private UUID userId;
-
-  private Date borrowDate = new Date();
-
-  private Date returnDate;
-
 }

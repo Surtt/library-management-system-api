@@ -76,31 +76,24 @@ public class Book extends BaseEntity {
 
   public void addAuthor(Author author) {
     this.authors.add(author);
-    author.getBooks()
-            .add(this);
+    author.getBooks().add(this);
   }
 
   public void removeAuthor(UUID authorId) {
-    Author author = this.authors.stream()
-            .filter(a -> a.getId() == authorId)
-            .findFirst()
-            .orElse(null);
+    Author author = this.authors.stream().filter(a -> a.getId() == authorId).findFirst().orElse(null);
     if (author != null) {
       this.authors.remove(author);
-      author.getBooks()
-              .remove(this);
+      author.getBooks().remove(this);
     }
   }
 
   public void decreaseBookQuantity() {
-    int length = this.getBookCopyList()
-            .size();
-    this.setQuantity(length);
+    List<BookCopy> length = this.getBookCopyList().stream().filter(BookCopy::getStatus).toList();
+    this.setQuantity(length.size());
   }
 
   public void increaseBookQuantity() {
-    int length = this.getBookCopyList()
-            .size();
-    this.setQuantity(length);
+    List<BookCopy> length = this.getBookCopyList().stream().filter(BookCopy::getStatus).toList();
+    this.setQuantity(length.size());
   }
 }
