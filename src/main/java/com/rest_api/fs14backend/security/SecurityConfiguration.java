@@ -35,30 +35,17 @@ public class SecurityConfiguration {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
-            .disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/api/v1/signup", "/api/v1/signin", "/api/v1/books/**", "/api/v1/users/me")
-            .permitAll()
-            .requestMatchers(antMatcher(HttpMethod.GET, "/api/v1/books/**"))
-            .permitAll()
+    http.csrf().disable().authorizeHttpRequests()
+            .requestMatchers("/api/v1/signup", "/api/v1/signin", "/api/v1/books/**", "/api/v1/users/me").permitAll()
+            .requestMatchers(antMatcher(HttpMethod.GET, "/api/v1/books/**"),
+                    antMatcher(HttpMethod.GET, "/api/v1/categories/**")).permitAll()
             .requestMatchers("/api/v1/authors/**", "/api/v1/categories/**", "/api/v1/roles/**", "/api/v1/users/**",
                     "/api/v1/books/borrow/**", "/api/v1/books/return/**", "/api/v1/books/book-copy",
-                    "/api/v1/books/checkouts/**")
-            .hasRole("ADMIN")
+                    "/api/v1/books/checkouts/**").hasRole("ADMIN")
             .requestMatchers(antMatcher(HttpMethod.POST, "/api/v1/books/**"),
                     antMatcher(HttpMethod.PUT, "/api/v1/books/**"), antMatcher(HttpMethod.DELETE, "/api/v1/books/**"))
-            .hasRole("ADMIN")
-            .anyRequest()
-            .authenticated()
-            .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-//            .httpBasic(withDefaults())
-//            .formLogin()
-//            .and()
-            // Add JWT token filter
+            .hasRole("ADMIN").anyRequest().authenticated().and().sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
