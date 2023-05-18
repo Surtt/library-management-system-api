@@ -5,6 +5,7 @@ import com.rest_api.fs14backend.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -14,6 +15,16 @@ public class BookCopyController {
   private final BookCopyService bookCopyService;
   private final BookService bookService;
   private final BookCopyMapper bookCopyMapper;
+
+  @GetMapping
+  public List<BookCopy> findAll() {
+    return bookCopyService.findAll();
+  }
+
+  @GetMapping("/book/{bookId}")
+  public List<BookCopy> findAllByBookId(@PathVariable UUID bookId) {
+    return bookCopyService.findAllByBookId(bookId);
+  }
 
   @GetMapping("/{id}")
   public BookCopy findById(@PathVariable UUID id) {

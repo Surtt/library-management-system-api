@@ -15,16 +15,22 @@ public class BookCopyService {
   private final BookRepository bookRepository;
   private final BookCopyMapper bookCopyMapper;
 
+  public List<BookCopy> findAll() {
+    return bookCopyRepository.findAll();
+  }
+
+  public List<BookCopy> findAllByBookId(UUID bookId) {
+    return bookCopyRepository.findAllByBookId(bookId);
+  }
+
   public BookCopy findById(UUID id) {
-    return bookCopyRepository.findById(id)
-            .orElse(null);
+    return bookCopyRepository.findById(id).orElse(null);
   }
 
   public BookCopy addOneBookCopy(BookCopyDTO bookCopyDTO) {
     List<BookCopy> bookCopyList = null;
     UUID bookId = bookCopyDTO.getBookId();
-    Book book = bookRepository.findById(bookId)
-            .get();
+    Book book = bookRepository.findById(bookId).get();
 
     BookCopy bookCopy = bookCopyMapper.toBookCopy(bookCopyDTO, book);
     bookCopyList = book.getBookCopyList();
@@ -40,12 +46,9 @@ public class BookCopyService {
 
   public void deleteOneBookCopyById(UUID bookCopyId) {
     List<BookCopy> bookCopyList = null;
-    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
-            .get();
-    UUID bookId = bookCopy.getBook()
-            .getId();
-    Book book = bookRepository.findById(bookId)
-            .get();
+    BookCopy bookCopy = bookCopyRepository.findById(bookCopyId).get();
+    UUID bookId = bookCopy.getBook().getId();
+    Book book = bookRepository.findById(bookId).get();
 
     bookCopyList = book.getBookCopyList();
     bookCopyList.remove(bookCopy);

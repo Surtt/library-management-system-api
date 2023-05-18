@@ -43,7 +43,7 @@ public class CheckoutService {
     if (quantityBookCopies < 1) {
       bookCopy.getBook().setStatus(false);
     }
-    bookCopyRepository.save(bookCopy);
+//    bookCopyRepository.save(bookCopy);
     return checkoutRepository.save(checkout);
   }
 
@@ -66,7 +66,7 @@ public class CheckoutService {
     if (quantityBookCopies > 0) {
       bookCopy.getBook().setStatus(true);
     }
-    bookCopyRepository.save(bookCopy);
+//    bookCopyRepository.save(bookCopy);
     return checkoutRepository.save(checkout);
   }
 
