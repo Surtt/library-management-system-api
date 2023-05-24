@@ -12,6 +12,11 @@ import java.util.UUID;
 public class CheckoutController {
   private final CheckoutService checkoutService;
 
+  @GetMapping("/checkouts")
+  public List<Checkout> findAll() {
+    return checkoutService.findAll();
+  }
+
   @PostMapping("/borrow")
   public Checkout borrowBook(@RequestBody CheckoutDTO checkoutDTO) {
     return checkoutService.borrowBook(checkoutDTO);

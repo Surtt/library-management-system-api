@@ -19,6 +19,10 @@ public class CheckoutService {
   private final UserRepository userRepository;
   private final CheckoutMapper checkoutMapper;
 
+  public List<Checkout> findAll() {
+    return checkoutRepository.findAll();
+  }
+
   public Checkout findById(UUID id) {
     return checkoutRepository.findById(id).orElse(null);
   }

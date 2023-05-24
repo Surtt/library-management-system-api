@@ -46,8 +46,7 @@ public class BookController {
     Author author = authorService.findById(authorId);
 
     Book book = bookMapper.toBook(bookDTO, category);
-    Boolean isAuthorExist = Collections.singletonList(book.getAuthors())
-            .contains(author);
+    Boolean isAuthorExist = Collections.singletonList(book.getAuthors()).contains(author);
     if (isAuthorExist) {
       throw new Exception("This author already exists");
     }
@@ -56,11 +55,18 @@ public class BookController {
   }
 
   @PutMapping("/{id}")
-  public Book updateOne(@RequestBody Book newBook, @PathVariable UUID id) {
+  public Book updateOne(@RequestBody @Valid BookDTO bookDTO, @PathVariable UUID id) {
+    UUID categoryId = bookDTO.getCategoryId();
+
+    Category category = categoryService.findById(categoryId);
+
+    Book newBook = bookMapper.toBook(bookDTO, category);
     Book book = bookService.findById(id);
+
     if (book == null) {
       throw new NotFoundException("Book with id " + id + " not found");
     }
+
     return bookService.updateOne(newBook, id);
   }
 
