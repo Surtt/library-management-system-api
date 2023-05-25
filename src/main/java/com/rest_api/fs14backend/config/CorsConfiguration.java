@@ -19,11 +19,9 @@ public class CorsConfiguration {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods(GET, POST, PUT, DELETE)
-                .allowedHeaders("*")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true);
+                .allowedOrigins("http://localhost:5173", "https://library-management-system-api-3qyl.onrender.com",
+                        "https://library-management-system-chi.vercel.app/").allowedMethods(GET, POST, PUT, DELETE)
+                .allowedHeaders("*").allowedOriginPatterns("*").allowCredentials(true);
       }
     };
   }

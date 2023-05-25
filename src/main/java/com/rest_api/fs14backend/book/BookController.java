@@ -22,7 +22,7 @@ public class BookController {
   private final AuthorService authorService;
   private final BookMapper bookMapper;
 
-  @CrossOrigin
+  @CrossOrigin(origins = {"http://localhost:5173/", "https://library-management-system-chi.vercel.app/"})
   @GetMapping
   public List<Book> findAll() {
     return bookService.findAll();
